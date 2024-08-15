@@ -193,22 +193,25 @@ const playlistItems = [
 </style>
 
 <script>
-  let startX;
+  let startX: number | null = null;
   let isInfoVisible = false;
   const threshold = 50; // Mínima distancia para considerar un deslizamiento
 
-  function toggleInfo(show) {
+  function toggleInfo(show: boolean) {
     document.body.classList.toggle('show-info', show);
     isInfoVisible = show;
-    document.querySelector('.arrow').style.transform = show ? 'rotate(90deg)' : 'rotate(0deg)';
+    const arrow = document.querySelector('.arrow') as HTMLElement;
+    if (arrow) {
+      arrow.style.transform = show ? 'rotate(90deg)' : 'rotate(0deg)';
+    }
   }
 
-  function handleTouchStart(e) {
+  function handleTouchStart(e: TouchEvent) {
     startX = e.touches[0].clientX;
   }
 
-  function handleTouchMove(e) {
-    if (!startX) return;
+  function handleTouchMove(e: TouchEvent) {
+    if (startX === null) return;
 
     let diffX = e.touches[0].clientX - startX;
 
@@ -227,7 +230,10 @@ const playlistItems = [
     startX = null;
   }
 
-  document.querySelector('.arrow').addEventListener('click', () => toggleInfo(!isInfoVisible));
+  const arrowElement = document.querySelector('.arrow');
+  if (arrowElement) {
+    arrowElement.addEventListener('click', () => toggleInfo(!isInfoVisible));
+  }
 
   if (window.innerWidth <= 768) {
     document.addEventListener('touchstart', handleTouchStart, false);
@@ -237,13 +243,15 @@ const playlistItems = [
     document.querySelectorAll('.soon').forEach((item) => {
       item.addEventListener('click', (e) => {
         e.preventDefault();
-        const soonText = item.querySelector('.soon-text');
-        soonText.style.opacity = '1';
-        soonText.style.top = '120%';
-        setTimeout(() => {
-          soonText.style.opacity = '0';
-          soonText.style.top = '100%';
-        }, 2000);
+        const soonText = item.querySelector('.soon-text') as HTMLElement;
+        if (soonText) {
+          soonText.style.opacity = '1';
+          soonText.style.top = '120%';
+          setTimeout(() => {
+            soonText.style.opacity = '0';
+            soonText.style.top = '100%';
+          }, 2000);
+        }
       });
     });
   }
