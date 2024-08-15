@@ -1,0 +1,250 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const playlistItems = [
+  { title: "I. スペーシー", soon: true, genre: "", spotifyLink: "" },
+  { title: "II. Moonglow", soon: false, genre: "Regguetón", spotifyLink: "https://open.spotify.com/playlist/2DrwoKTk761KaqXY71xXW6?si=a53d1ab39fee49cc" },
+  { title: "III. 時間に乗る", soon: true, genre: "", spotifyLink: "" },
+  { title: "IV. あなたのために", soon: true, genre: "", spotifyLink: "" },
+  { title: "V. Melodies", soon: false, genre: "Baladas", spotifyLink: "https://open.spotify.com/playlist/3ZiKVRv8oMaQhPPjdBZl0S" },
+  { title: "VI. Do you think about me?", soon: false, genre: "todo", spotifyLink: "" }
+];
+---
+
+<Layout title="日本のバイブス">
+  <main>
+    <ul>
+      {playlistItems.map((item, index) => (
+        <li class={item.soon ? 'soon' : 'available'} data-genre={item.genre}>
+          <a href={item.spotifyLink} target="_blank" rel="noopener noreferrer" class="playlist-link">
+            <span class="text">{item.title}</span>
+            {item.soon ? 
+              <span class="info-text soon-text">soon</span> : 
+              <span class="info-text genre-text">{item.genre}</span>
+            }
+          </a>
+        </li>
+      ))}
+    </ul>
+    <div class="footer">
+      <div class="creditos">ここで私の音楽雑誌が展開される © 2024</div>
+      <div class="arrow">→</div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400&display=swap');
+
+  body {
+    background-color: #FF5722;
+    color: #1A1A1A;
+    font-family: 'Noto Sans JP', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  main {
+    text-align: center;
+    padding: 2rem;
+    transform: translateY(-5%);
+    width: 100%;
+    max-width: 600px;
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  li {
+    margin: 0.7rem 0;
+    position: relative;
+  }
+
+  .playlist-link {
+    color: #1A1A1A;
+    text-decoration: none;
+    font-size: 1.1rem;
+    position: relative;
+    display: inline-block;
+    transition: all 0.3s ease;
+    padding: 0.3rem 0.5rem;
+  }
+
+  .text {
+    position: relative;
+    z-index: 1;
+  }
+
+  .playlist-link::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.1);
+    left: 0;
+    top: 0;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+  }
+
+  .playlist-link:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .info-text {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1A1A1A;
+    color: #FF5722;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .soon:hover .soon-text,
+  .available:hover .genre-text {
+    opacity: 1;
+    top: 120%;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+  }
+
+  .creditos {
+    font-size: 0.6rem;
+    opacity: 0.6;
+  }
+
+  .arrow {
+    font-size: 0.8rem;
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
+
+  /* Animación de onda */
+  @keyframes wave {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+
+  li {
+    animation: wave 3s ease-in-out infinite;
+    animation-delay: calc(var(--i) * 0.5s);
+  }
+
+  /* Mejoras para dispositivos móviles */
+  @media (max-width: 768px) {
+    body {
+      align-items: flex-start;
+      padding-top: 1rem;
+    }
+
+    main {
+      transform: none;
+      padding: 4rem;
+    }
+
+    .playlist-link {
+      font-size: 1rem;
+      padding: 0.2rem 0.4rem;
+    }
+
+    li {
+      margin: 0.1rem 0;
+    }
+
+    .info-text {
+      position: static;
+      transform: none;
+      display: block;
+      margin-top: 0rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    body.show-info .info-text {
+      opacity: 1;
+    }
+
+    body.show-info .arrow {
+      transform: rotate(90deg);
+    }
+  }
+</style>
+
+<script>
+  let startX;
+  let isInfoVisible = false;
+  const threshold = 50; // Mínima distancia para considerar un deslizamiento
+
+  function toggleInfo(show) {
+    document.body.classList.toggle('show-info', show);
+    isInfoVisible = show;
+    document.querySelector('.arrow').style.transform = show ? 'rotate(90deg)' : 'rotate(0deg)';
+  }
+
+  function handleTouchStart(e) {
+    startX = e.touches[0].clientX;
+  }
+
+  function handleTouchMove(e) {
+    if (!startX) return;
+
+    let diffX = e.touches[0].clientX - startX;
+
+    if (Math.abs(diffX) > threshold) {
+      e.preventDefault();
+      if (diffX > 0 && !isInfoVisible) {
+        toggleInfo(true);
+      } else if (diffX < 0 && isInfoVisible) {
+        toggleInfo(false);
+      }
+      startX = null;
+    }
+  }
+
+  function handleTouchEnd() {
+    startX = null;
+  }
+
+  document.querySelector('.arrow').addEventListener('click', () => toggleInfo(!isInfoVisible));
+
+  if (window.innerWidth <= 768) {
+    document.addEventListener('touchstart', handleTouchStart, false);
+    document.addEventListener('touchmove', handleTouchMove, false);
+    document.addEventListener('touchend', handleTouchEnd, false);
+  } else {
+    document.querySelectorAll('.soon').forEach((item) => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const soonText = item.querySelector('.soon-text');
+        soonText.style.opacity = '1';
+        soonText.style.top = '120%';
+        setTimeout(() => {
+          soonText.style.opacity = '0';
+          soonText.style.top = '100%';
+        }, 2000);
+      });
+    });
+  }
+</script>
