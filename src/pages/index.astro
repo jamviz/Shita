@@ -7,7 +7,7 @@ const playlistItems = [
   { title: "III. 時間に乗る", soon: true, genre: "", spotifyLink: "" },
   { title: "IV. あなたのために", soon: true, genre: "", spotifyLink: "" },
   { title: "V. Melodies", soon: false, genre: "Baladas", spotifyLink: "https://open.spotify.com/playlist/3ZiKVRv8oMaQhPPjdBZl0S" },
-  { title: "VI. Do you think about me?", soon: false, genre: "todo", spotifyLink: "" }
+  { title: "VI. Do you think about me?", soon: false, genre: "todo", spotifyLink: "https://open.spotify.com/playlist/1MHPHALPsM3CtGQd0txWIw?si=cfba14854204492c" }
 ];
 ---
 
@@ -37,7 +37,7 @@ const playlistItems = [
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400&display=swap');
 
   body {
-    background-color: #FF5722;
+    background-color: #ff5c29;
     color: #1A1A1A;
     font-family: 'Noto Sans JP', sans-serif;
     display: flex;
@@ -106,7 +106,7 @@ const playlistItems = [
     left: 50%;
     transform: translateX(-50%);
     background: #1A1A1A;
-    color: #FF5722;
+    color: #ff5c29;
     padding: 0.3rem 0.5rem;
     border-radius: 4px;
     font-size: 0.7rem;
@@ -144,12 +144,12 @@ const playlistItems = [
   /* Animación de onda */
   @keyframes wave {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-3px); }
+    50% { transform: translateY(-4px); }
   }
 
   @keyframes waveMobile {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
+    50% { transform: translateY(-3px); }
   }
 
   li {
@@ -165,8 +165,8 @@ const playlistItems = [
     }
 
     main {
-      transform: translateY(-5%); /* Ajustado para móviles */
-      padding: 4rem;
+      transform: translateY(-0%); /* Ajustado para móviles */
+      padding: 5rem;
     }
 
     .playlist-link {
